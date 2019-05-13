@@ -21,29 +21,31 @@ class Order{
 		this.assigned_prepArea = prepArea;
 	}
 
-	void addwaiter(Waiter w){
-		waiters.add(w);
-	}
-
-	boolean onEdit(p, action){
+	void onEdit(p, action){
 		if (!isAssigned()){
 			send(p, action);
 			showSuccess("Successful update");
-			return true;
 		}
 		else{
-			PrepAreaNotification(this).show();
-
-			return false;
+			if (PrepAreaNotification.show()){
+				send();
+				showSuccess("Successful update");
+			}
+			else{
+				showFailure("Update failed");
+			}
 		}
 	}
 
-	void send(p, action){
-		if (p){
+	void send(Product p, int action){
+		if (action == 0){
 			products.add(p);
 		}
-		else{
+		else if (action == 1){
 			products.remove(p);
+		}
+		else{
+			PrepArea.findBestForOrder(this).showNewOrder();
 		}
 	}
 
@@ -56,17 +58,22 @@ class Order{
 		}
 	}
 
-	void assignOrder(){
-
+	void assignOrder(PrepArea prepArea, Order o){
+		assigned_prepArea = prepArea;
+		PrepArea.orders.add(o);
 	}
 
 	void setReady(){
-		Waiter.findBestForTable(table);
-		Waiter.notify();
+		Waiter.findBestForTable(table).notify();
 	}
+	
+	void setPaid(Table t){
+		this.balance = 0;
+		t.balance = 0;
+		t.status = "free";
 
 	void onRejected(){
-		PrepArea.findBestForOrder(products, table);
+		send();
 	}
 
 	static List<Order> findBestCombination(List<Order> orders){
@@ -81,6 +88,6 @@ class Order{
 	}
 
 	void addProduct(){
-
+		products.add(p);
 	}
 }
