@@ -64,7 +64,8 @@ class Order{
 	}
 
 	void setReady(){
-		Waiter.findBestForTable(table).notify();
+		Notification n;
+		Waiter.findBestForTable(table).notify(n);
 	}
 	
 	void setPaid(Table t){
