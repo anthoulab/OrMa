@@ -13,14 +13,18 @@ class PrepArea{
 		this.floor = floor;
 		}
 
-	static PrepArea findBestForOrder(products, table){
+	static PrepArea findBestForOrder(Order o){
 		PrepArea preparea;
 
 
 		return preparea;
 	}
 
-	getEmployee(){
+	Employee getEmployee(){
 
+	}
+	
+	void showNewOrder(){
+		
 	}
 }
