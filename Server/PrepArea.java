@@ -4,6 +4,7 @@ class PrepArea{
 	protected Map<Product, int> product_stock;
 	protected int floor;
 	protected ArrayList<Order> orders = new ArrayList();
+	protected ArrayList<Order> assigned_orders = new ArrayList();
 	protected ArrayList<Product> product_list = new ArrayList();
 	protected PrepAreaEmployee employee;
 
@@ -20,8 +21,8 @@ class PrepArea{
 		return preparea;
 	}
 
-	Employee getEmployee(){
-
+	PrepAreaEmployee getEmployee(){
+		return employee;
 	}
 	
 	void showNewOrder(){
