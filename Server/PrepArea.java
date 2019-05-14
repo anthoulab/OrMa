@@ -25,7 +25,7 @@ class PrepArea{
 		return employee;
 	}
 	
-	void showNewOrder(){
+	void showNewOrder(Order o){
 		
 	}
 }
