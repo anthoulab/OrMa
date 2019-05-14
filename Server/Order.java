@@ -7,11 +7,12 @@ class Order{
 	private Date pay_time;
 	private Table table;
 	private ArrayList<Product> products = new ArrayList();
+	private ArrayList<boolean> product_paid = new ArrayList();
 	private ArrayList<Waiter> waiters = new ArrayList();
 	private PrepArea assigned_prepArea;
 	public static ArrayList<Order> allorders = new ArrayList();
 
-	Order(long id, double balance, date create, date delivery, date pay, Table table, PrepArea prepArea){
+	Order(long id, double balance, Date create, Date delivery, Date pay, Table table, PrepArea prepArea){
 		this.id = id;
 		this.balance = balance;
 		this.create_time = create;
@@ -21,32 +22,27 @@ class Order{
 		this.assigned_prepArea = prepArea;
 	}
 
-	void onEdit(p, action){
-		if (!isAssigned()){
-			send(p, action);
+	void onEdit(List<Product> p, List<int> action){
+		PrepAreaNotification n = new PrepAreaNotification(this.assigned_prepArea, this);
+		i = 0;
+		if (!isAssigned() || n.show()){
+			for (Product x : p){
+				if (action.get(i) = 0){   //add a product
+					this.products.add(x);
+				}else{   //remove a product
+					this.products.remove(x);
+				}
+				i = i + 1;
+			}
+			send();
 			showSuccess("Successful update");
-		}
-		else{
-			if (PrepAreaNotification.show()){
-				send();
-				showSuccess("Successful update");
-			}
-			else{
-				showFailure("Update failed");
-			}
+		}else{
+			showFailure("Update failed");
 		}
 	}
 
-	void send(Product p, int action){
-		if (action == 0){
-			products.add(p);
-		}
-		else if (action == 1){
-			products.remove(p);
-		}
-		else{
-			PrepArea.findBestForOrder(this).showNewOrder();
-		}
+	void send(){
+		
 	}
 
 	boolean isAssigned(){
@@ -60,18 +56,18 @@ class Order{
 
 	void assignOrder(PrepArea prepArea, Order o){
 		assigned_prepArea = prepArea;
-		PrepArea.orders.add(o);
+		prepArea.assigned_orders.add(o);
 	}
 
 	void setReady(){
-		Notification n;
-		Waiter.findBestForTable(table).notify(n);
+		Waiter w = Waiter.findBestForTable(this.table);
+		OrderReadyNotification n = new OrderReadyNotification(this, this.assigned_prepArea, w);
+		notify(n);
 	}
 	
-	void setPaid(Table t){
-		this.balance = 0;
-		t.balance = 0;
-		t.status = "free";
+	void setPaid(List<Product> p){
+		
+	}
 
 	void onRejected(){
 		send();
@@ -80,7 +76,6 @@ class Order{
 	static List<Order> findBestCombination(List<Order> orders){
 		PrepArea preparea;
 
-
 		return List<Order>;
 	}
 
@@ -88,7 +83,11 @@ class Order{
 
 	}
 
-	void addProduct(){
+	void addProduct(Product p){
 		products.add(p);
+	}
+		
+	double getBalance(){
+		return balance;
 	}
 }
