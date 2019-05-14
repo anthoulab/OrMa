@@ -13,7 +13,7 @@ abstract class Employee{
 	}
 
 	Device getDevice(){
-
+		return device;
 	}
 	
 	boolean isNew(){
