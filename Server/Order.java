@@ -7,7 +7,7 @@ class Order{
 	private Date pay_time;
 	private Table table;
 	private ArrayList<Product> products = new ArrayList();
-	private ArrayList<boolean> product_paid = new ArrayList();
+	private ArrayList<Boolean> products_paid = new ArrayList();
 	private ArrayList<Waiter> waiters = new ArrayList();
 	private PrepArea assigned_prepArea;
 	public static ArrayList<Order> allorders = new ArrayList();
@@ -23,16 +23,22 @@ class Order{
 	}
 
 	void onEdit(List<Product> p, List<int> action){
-		PrepAreaNotification n = new PrepAreaNotification(this.assigned_prepArea, this);
-		i = 0;
-		if (!isAssigned() || n.show()){
-			for (Product x : p){
-				if (action.get(i) = 0){   //add a product
-					this.products.add(x);
+		
+		boolean flag = true;
+		if(isAssigned()){
+			PrepAreaNotification n = new PrepAreaNotification(this.assigned_prepArea, this);
+			if(n.show() == false){
+				flag = false;
+			}
+		}
+		
+		if (flag == true){
+			for(int i=0; i<p.size(); i++){
+				if (action.get(i) == 1){   //add a product
+					this.products.add(p.get(i));
 				}else{   //remove a product
-					this.products.remove(x);
+					this.products.remove(p.get(i));
 				}
-				i = i + 1;
 			}
 			send();
 			showSuccess("Successful update");
@@ -60,13 +66,18 @@ class Order{
 	}
 
 	void setReady(){
-		Waiter w = Waiter.findBestForTable(this.table);
-		OrderReadyNotification n = new OrderReadyNotification(this, this.assigned_prepArea, w);
-		notify(n);
+		Waiter w;
+		do{
+			w = Waiter.findBestForTable(this.table);	// estw oti ka8e fora epistrefei allon Waiter
+			OrderReadyNotification n = new OrderReadyNotification(this, this.assigned_prepArea, w);
+		}until(w.notify(n) == true);
 	}
 	
-	void setPaid(List<Product> p){
-		
+	void setPaid(List<Product> products){
+		for(Product p : products){
+			products_paid.add(p);
+			this.balance -= p.price;
+		}
 	}
 
 	void onRejected(){
