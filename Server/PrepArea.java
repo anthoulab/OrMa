@@ -26,6 +26,8 @@ class PrepArea{
 	}
 	
 	void showNewOrder(Order o){
+		orders.add(o);
 		
+		//Show new order to employee
 	}
 }
