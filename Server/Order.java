@@ -48,7 +48,8 @@ class Order{
 	}
 
 	void send(){
-		
+		PrepArea prepArea = PrepArea.findBestForOrder(this);
+		prepArea.showNewOrder(this);
 	}
 
 	boolean isAssigned(){
@@ -85,8 +86,6 @@ class Order{
 	}
 
 	static List<Order> findBestCombination(List<Order> orders){
-		PrepArea preparea;
-
 		return List<Order>;
 	}
 
